@@ -307,6 +307,8 @@ int grades_add_grade(struct grades *grades, const char *name, int id, int grade)
 	if (it_student == NULL) {
         	return 1; // student not found
 	}
+	Student stu = (Student) list_get(it_student);
+	
 	// Check if course with same name already exists
    	for (struct iterator *it_course = list_begin(stu->courses);
          	it_course != NULL;
@@ -345,14 +347,23 @@ int grades_add_grade(struct grades *grades, const char *name, int id, int grade)
  * @note On error, sets "out" to NULL.
  */
 float grades_calc_avg(struct grades *grades, int id, char **out){
-	if(!grades)
+	if(!grades) {
+		*out = NULL;
 		return -1;
+	}
 	struct iterator *it_student = grades_search(grades->students, id);
 	if (it_student == NULL) {
-        	return 1; // student not found
+        	*out = NULL;
+		return -1; // student not found
 	}
 	int counter = 0, sum = 0;
 	float avg = 0;
+	Student stu = (Student) list_get(it_student);
+	*out = malloc(strlen(stu->name) + 1);
+	if (!(*out)) {
+    		return -1;
+	}
+	strcpy(*out, stu->name);
 	for (struct iterator *it_course = list_begin(stu->courses);
          	it_course != NULL;
         	it_course = list_next(it_course)) {
@@ -363,7 +374,7 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 	if(counter == 0) {
 		return 0;
 	}
-	avg = sum/counter;
+	avg = (float)sum/counter;
 	return avg;
 }
 
