@@ -21,6 +21,35 @@ struct grades {
 /** USER FUNCTION for linked-list.h **/
 
 /**
+ * @brief Initializes a Course object with
+ *      .name = "name", .grade = "grade"
+ * @param name      The course name
+ * @param grade     The course grade
+ * @return          A new Course (i.e. struct course*), or NULL on failure
+ */
+static Course course_create(const char *name, int grade) {
+    if (!name || grade < 0 || grade > 100) {
+        return NULL;
+    }
+
+    Course new_course = malloc(sizeof(*new_course));
+    if (!new_course) {
+        return NULL;
+    }
+
+    new_course->name = malloc(strlen(name) + 1);
+    if (!new_course->name) {
+        free(new_course);
+        return NULL;
+    }
+    strcpy(new_course->name, name);
+
+    new_course->grade = grade;
+
+    return new_course;
+}
+
+/**
  * @brief Clones a Course object
  * @param element An original Course object to clone
  * @param output A pointer to the cloned Course object
@@ -270,21 +299,38 @@ int grades_add_student(struct grades *grades, const char *name, int id) {
  * is not between 0 to 100.
  */
 int grades_add_grade(struct grades *grades, const char *name, int id, int grade) {
-	struct iterator student = grades_search(grades, id);
-	if(!student || grade < 0 || grade > 100) {
-		printf("Failes");
-		return -1;
+	if (!grades || !name || grade < 0 || grade > 100) {
+		return 1;
+  	  }
+
+   	struct iterator *it_student = grades_search(grades->students, id);
+	if (it_student == NULL) {
+        	return 1; // student not found
 	}
-	struct iterator course = student->courses;
-	while(!course) {
-		if(strcomp(course->name, name)) {
-			printf("Failes");
-			return -1;
-		}
-		course++;
+	// Check if course with same name already exists
+   	for (struct iterator *it_course = list_begin(stu->courses);
+         	it_course != NULL;
+        	it_course = list_next(it_course)) {
+       		Course c = (Course) list_get(it_course);
+        	if (strcmp(c->name, name) == 0) {
+           		return 1; // course already exists
+        	}
+    	}
+	// Create new course
+	Course new_course = course_create(name, grade);
+	if (new_course == NULL) {
+        	return 1; // failed to create
 	}
-	course = student->courses;
-	// להוסיף קורס חדש לתחילת הרשימה עם הקורס הנ"ל והציון
+
+	// Add course to the courses list
+    	if (list_push_back(stu->courses, new_course) != 0) {
+        	course_destroy(new_course); // cleanup on failure
+        	return 1;
+    	}
+
+    	// list_push_back creates a clone, so we can free our original
+   	course_destroy(new_course);
+    	return 0;
 }
 
 /**
@@ -299,7 +345,26 @@ int grades_add_grade(struct grades *grades, const char *name, int id, int grade)
  * @note On error, sets "out" to NULL.
  */
 float grades_calc_avg(struct grades *grades, int id, char **out){
-	
+	if(!grades)
+		return -1;
+	struct iterator *it_student = grades_search(grades->students, id);
+	if (it_student == NULL) {
+        	return 1; // student not found
+	}
+	int counter = 0, sum = 0;
+	float avg = 0;
+	for (struct iterator *it_course = list_begin(stu->courses);
+         	it_course != NULL;
+        	it_course = list_next(it_course)) {
+		Course c = (Course) list_get(it_course);
+		counter++;
+		sum += c->grade;
+	}
+	if(counter == 0) {
+		return 0;
+	}
+	avg = sum/counter;
+	return avg;
 }
 
 /**
