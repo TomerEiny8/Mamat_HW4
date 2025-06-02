@@ -1,6 +1,6 @@
 #include "grades.h"
 #include <stdlib.h>
-#include <string.>
+#include <string.h>
 #include "linked-list.h"
 
 typedef struct course {
