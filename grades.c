@@ -386,7 +386,24 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
  * @note The courses should be printed according to the order 
  * in which they were inserted into "grades"
  */
-int grades_print_student(struct grades *grades, int id);
+int grades_print_student(struct grades *grades, int id){
+	if(!grades){
+		return -1;
+	}
+	struct iterator *it_student = grades_search(grades->students, id);
+	if (it_student == NULL) {
+		return -1; // student not found
+	}
+	Student stu = (Student) list_get(it_student);
+	printf("%s %s:", stu->name, stu->id);
+	for (struct iterator *it_course = list_begin(stu->courses);
+         	it_course != NULL;
+        	it_course = list_next(it_course)) {
+		Course c = (Course) list_get(it_course);
+		printf(" %s %d," c->name, c->grade);
+	}
+	return 0;
+}
 
 /**
  * @brief Prints all students in "grade", in the following format:
