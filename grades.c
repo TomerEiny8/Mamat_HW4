@@ -262,7 +262,30 @@ int grades_add_student(struct grades *grades, const char *name, int id) {
 	return 0;
 }
 
-
+/**
+ * @brief Adds a course with "name" and "grade" to the student with "id"
+ * @return 0 on success
+ * @note Failes if "grades" is invalid, if a student with "id" does not exist
+ * in "grades", if the student already has a course with "name", or if "grade"
+ * is not between 0 to 100.
+ */
+int grades_add_grade(struct grades *grades, const char *name, int id, int grade) {
+	struct iterator student = grades_search(grades, id);
+	if(!student || grade < 0 || grade > 100) {
+		printf("Failes");
+		return -1;
+	}
+	struct iterator course = student->courses;
+	while(!course) {
+		if(strcomp(course->name, name)) {
+			printf("Failes");
+			return -1;
+		}
+		course++;
+	}
+	course = student->courses;
+	// להוסיף קורס חדש לתחילת הרשימה עם הקורס הנ"ל והציון
+}
 
 
 
