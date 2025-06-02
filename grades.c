@@ -287,7 +287,44 @@ int grades_add_grade(struct grades *grades, const char *name, int id, int grade)
 	// להוסיף קורס חדש לתחילת הרשימה עם הקורס הנ"ל והציון
 }
 
+/**
+ * @brief Calcs the average of the student with "id" in "grades".
+ * @param[out] out This method sets the variable pointed by "out" to the
+ * student's name. Needs to allocate memory. The user is responsible for
+ * freeing the memory.
+ * @returns The average, or -1 on error
+ * @note Fails if "grades" is invalid, or if a student with "id" does not exist
+ * in "grades".
+ * @note If the student has no courses, the average is 0.
+ * @note On error, sets "out" to NULL.
+ */
+float grades_calc_avg(struct grades *grades, int id, char **out){
+	
+}
 
+/**
+ * @brief Prints the courses of the student with "id" in the following format:
+ * STUDENT-NAME STUDENT-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
+ * @returns 0 on success
+ * @note Fails if "grades" is invalid, or if a student with "id" does not exist
+ * in "grades".
+ * @note The courses should be printed according to the order 
+ * in which they were inserted into "grades"
+ */
+int grades_print_student(struct grades *grades, int id);
+
+/**
+ * @brief Prints all students in "grade", in the following format:
+ * STUDENT-1-NAME STUDENT-1-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
+ * STUDENT-2-NAME STUDENT-2-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
+ * @returns 0 on success
+ * @note Fails if "grades" is invalid
+ * @note The students should be printed according to the order 
+ * in which they were inserted into "grades"
+ * @note The courses should be printed according to the order 
+ * in which they were inserted into "grades"
+ */
+int grades_print_all(struct grades *grades);
 
 
 
