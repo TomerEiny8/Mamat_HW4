@@ -388,20 +388,24 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
  */
 int grades_print_student(struct grades *grades, int id){
 	if(!grades){
-		return -1;
+		return 1;
 	}
 	struct iterator *it_student = grades_search(grades->students, id);
 	if (it_student == NULL) {
-		return -1; // student not found
+		return 1; // student not found
 	}
 	Student stu = (Student) list_get(it_student);
-	printf("%s %s:", stu->name, stu->id);
-	for (struct iterator *it_course = list_begin(stu->courses);
-         	it_course != NULL;
-        	it_course = list_next(it_course)) {
-		Course c = (Course) list_get(it_course);
-		printf(" %s %d," c->name, c->grade);
-	}
+	printf("%s %d:", stu->name, stu->id);
+	struct iterator *it_course = list_begin(stu->courses);
+	while (it_course != NULL) {
+        	Course c = (Course) list_get(it_course);
+        	printf(" %s %d", c->name, c->grade);
+       		it_course = list_next(it_course);
+        	if (it_course != NULL) {
+            		printf(",");
+        	}
+    	}
+	printf("\n");
 	return 0;
 }
 
@@ -416,7 +420,28 @@ int grades_print_student(struct grades *grades, int id){
  * @note The courses should be printed according to the order 
  * in which they were inserted into "grades"
  */
-int grades_print_all(struct grades *grades);
+int grades_print_all(struct grades *grades){
+	if(!grades){
+		return 1;
+	}
+	struct iterator *it_student = list_begin(grades->students);
+	while(it_student != NULL) {
+		Student stu = (Student) list_get(it_student);
+		printf("%s %d:", stu->name, stu->id);
+		struct iterator *it_course = list_begin(stu->courses);
+		while (it_course != NULL) {
+        		Course c = (Course) list_get(it_course);
+        		printf(" %s %d", c->name, c->grade);
+       			it_course = list_next(it_course);
+        		if (it_course != NULL) {
+            			printf(",");
+        		}
+    		}
+		printf("\n");
+		it_student = list_next(it_student);
+	}
+	return 0;
+}
 
 
 
