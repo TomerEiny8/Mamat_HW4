@@ -421,11 +421,11 @@ int grades_print_student(struct grades *grades, int id){
  * in which they were inserted into "grades"
  */
 int grades_print_all(struct grades *grades){
-	if(!grades){
+	if (!grades){
 		return 1;
 	}
 	struct iterator *it_student = list_begin(grades->students);
-	while(it_student != NULL) {
+	while (it_student != NULL) {
 		Student stu = (Student) list_get(it_student);
 		printf("%s %d:", stu->name, stu->id);
 		struct iterator *it_course = list_begin(stu->courses);
