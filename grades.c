@@ -357,10 +357,10 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 		return -1; // student not found
 	}
 	int counter = 0, sum = 0;
-	float avg = 0;
 	Student stu = (Student) list_get(it_student);
 	*out = malloc(strlen(stu->name) + 1);
 	if (!(*out)) {
+		*out = NULL;
     		return -1;
 	}
 	strcpy(*out, stu->name);
@@ -374,8 +374,7 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 	if(counter == 0) {
 		return 0;
 	}
-	avg = (float)sum/counter;
-	return avg;
+	return  (float)sum/counter;
 }
 
 /**
