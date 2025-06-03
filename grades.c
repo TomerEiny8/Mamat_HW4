@@ -1,6 +1,7 @@
 #include "grades.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "linked-list.h"
 
 typedef struct course {
@@ -347,6 +348,9 @@ int grades_add_grade(struct grades *grades, const char *name, int id, int grade)
  * @note On error, sets "out" to NULL.
  */
 float grades_calc_avg(struct grades *grades, int id, char **out){
+	if(!out) {
+		return -1;
+	}
 	if(!grades) {
 		*out = NULL;
 		return -1;
@@ -356,21 +360,26 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
         	*out = NULL;
 		return -1; // student not found
 	}
+
 	int counter = 0, sum = 0;
 	Student stu = (Student) list_get(it_student);
+	Course c;
+
 	*out = malloc(strlen(stu->name) + 1);
 	if (!(*out)) {
 		*out = NULL;
     		return -1;
 	}
 	strcpy(*out, stu->name);
+
 	for (struct iterator *it_course = list_begin(stu->courses);
          	it_course != NULL;
         	it_course = list_next(it_course)) {
-		Course c = (Course) list_get(it_course);
+		c = (Course) list_get(it_course);
 		counter++;
 		sum += c->grade;
 	}
+
 	if(counter == 0) {
 		return 0;
 	}
